@@ -15,7 +15,6 @@ import java.io.IOException;
  */
 public class OkHttpDemo {
 
-
     public static void main(String[] args) {
         OkHttpClient okHttpClient = new OkHttpClient();
         Response res;

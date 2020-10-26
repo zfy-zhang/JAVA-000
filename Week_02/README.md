@@ -269,19 +269,15 @@ import java.io.IOException;
  * @since
  */
 public class OkHttpDemo {
-
-
+    
     public static void main(String[] args) {
         OkHttpClient okHttpClient = new OkHttpClient();
-        Response response;
+        Response res;
         String url = "http://localhost:8808/test";
-        Request request = new Request.Builder().url(url).get().build();
+        Request req = new Request.Builder().url(url).get().build();
         try {
-            response = okHttpClient.newCall(request).execute();
-
-            System.out.println(response.body().string());
-
-
+            res = okHttpClient.newCall(req).execute();
+            System.out.println(res.body().string());
         } catch (IOException e) {
             e.printStackTrace();
         }
