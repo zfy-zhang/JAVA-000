@@ -259,6 +259,187 @@ ElishadeMacBook-Pro:java alisha$ java -XX:+UseG1GC -Xms512m -Xmx512m -XX:+PrintG
 ```
 
 
+
+#### 作业二：使用压测工具（wrk 或 sb），演练 gateway-server-0.0.1-SNAPSHOT.jar 示例
+
+压测脚本：wrk -c 40 -d60s  http://localhost:8088/api/hello 
+启动命令：java -jar  -XX:+UseConcMarkSweepGC -Xms128m -Xmx128m -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps gateway-server-0.0.1-SNAPSHOT.jar 
+
+**执行结果：**
+```java
+ElishadeMacBook-Pro:~ alisha$ wrk -c 40 -d60s  http://localhost:8088/api/hello
+Running 1m test @ http://localhost:8088/api/hello
+  2 threads and 40 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.26ms   25.64ms 268.44ms   93.94%
+    Req/Sec    16.45k     5.95k   26.71k    78.39%
+  1925752 requests in 1.00m, 229.92MB read
+Requests/sec:  32052.61
+Transfer/sec:      3.83MB
+```
+
+**GC 结果：只截取至第一次 Full GC 完成**
+```java
+Java HotSpot(TM) 64-Bit Server VM (25.131-b11) for bsd-amd64 JRE (1.8.0_131-b11), built on Mar 15 2017 01:32:22 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
+Memory: 4k page, physical 16777216k(767128k free)
+
+/proc/meminfo:
+
+CommandLine flags: -XX:InitialHeapSize=134217728 -XX:MaxHeapSize=134217728 -XX:MaxNewSize=44740608 -XX:MaxTenuringThreshold=6 -XX:NewSize=44740608 -XX:OldPLABSize=16 -XX:OldSize=89477120 -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:+UseParNewGC 
+2020-10-27T23:06:55.329-0800: 0.458: [GC (Allocation Failure) 2020-10-27T23:06:55.329-0800: 0.458: [ParNew: 34944K->3174K(39296K), 0.0033212 secs] 34944K->3174K(126720K), 0.0034378 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] 
+2020-10-27T23:06:55.471-0800: 0.601: [GC (Allocation Failure) 2020-10-27T23:06:55.471-0800: 0.601: [ParNew: 38118K->2698K(39296K), 0.0137157 secs] 38118K->4620K(126720K), 0.0138039 secs] [Times: user=0.05 sys=0.01, real=0.01 secs] 
+2020-10-27T23:06:55.580-0800: 0.709: [GC (Allocation Failure) 2020-10-27T23:06:55.580-0800: 0.709: [ParNew: 37642K->2742K(39296K), 0.0021931 secs] 39564K->4665K(126720K), 0.0022657 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+2020-10-27T23:06:55.684-0800: 0.813: [GC (Allocation Failure) 2020-10-27T23:06:55.684-0800: 0.814: [ParNew: 37686K->2349K(39296K), 0.0029658 secs] 39609K->4871K(126720K), 0.0030386 secs] [Times: user=0.02 sys=0.00, real=0.00 secs] 
+2020-10-27T23:06:55.853-0800: 0.983: [GC (Allocation Failure) 2020-10-27T23:06:55.853-0800: 0.983: [ParNew: 37293K->4352K(39296K), 0.0033626 secs] 39815K->7257K(126720K), 0.0034355 secs] [Times: user=0.01 sys=0.01, real=0.00 secs] 
+2020-10-27T23:07:00.683-0800: 5.812: [GC (Allocation Failure) 2020-10-27T23:07:00.683-0800: 5.812: [ParNew: 39296K->3485K(39296K), 0.0061057 secs] 42201K->8032K(126720K), 0.0062020 secs] [Times: user=0.03 sys=0.01, real=0.00 secs] 
+2020-10-27T23:07:00.689-0800: 5.819: [GC (CMS Initial Mark) [1 CMS-initial-mark: 4547K(87424K)] 8331K(126720K), 0.0007670 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] 
+2020-10-27T23:07:00.690-0800: 5.820: [CMS-concurrent-mark-start]
+2020-10-27T23:07:00.700-0800: 5.829: [CMS-concurrent-mark: 0.005/0.009 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] 
+2020-10-27T23:07:00.700-0800: 5.829: [CMS-concurrent-preclean-start]
+2020-10-27T23:07:00.700-0800: 5.829: [CMS-concurrent-preclean: 0.000/0.000 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+2020-10-27T23:07:00.700-0800: 5.829: [CMS-concurrent-abortable-preclean-start]
+2020-10-27T23:07:00.800-0800: 5.929: [CMS-concurrent-abortable-preclean: 0.059/0.100 secs] [Times: user=0.37 sys=0.01, real=0.10 secs] 
+2020-10-27T23:07:00.800-0800: 5.929: [GC (CMS Final Remark) [YG occupancy: 27568 K (39296 K)]2020-10-27T23:07:00.800-0800: 5.929: [Rescan (parallel) , 0.0026561 secs]2020-10-27T23:07:00.803-0800: 5.932: [weak refs processing, 0.0000306 secs]2020-10-27T23:07:00.803-0800: 5.932: [class unloading, 0.0030727 secs]2020-10-27T23:07:00.806-0800: 5.935: [scrub symbol table, 0.0028775 secs]2020-10-27T23:07:00.809-0800: 5.938: [scrub string table, 0.0003117 secs][1 CMS-remark: 4547K(87424K)] 32115K(126720K), 0.0094797 secs] [Times: user=0.03 sys=0.00, real=0.00 secs] 
+2020-10-27T23:07:00.809-0800: 5.939: [CMS-concurrent-sweep-start]
+2020-10-27T23:07:00.811-0800: 5.941: [CMS-concurrent-sweep: 0.002/0.002 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+2020-10-27T23:07:00.812-0800: 5.941: [CMS-concurrent-reset-start]
+2020-10-27T23:07:00.812-0800: 5.942: [CMS-concurrent-reset: 0.001/0.001 secs] [Times: user=0.01 sys=0.01, real=0.00 secs] 
+2020-10-27T23:07:00.863-0800: 5.993: [GC (Allocation Failure) 2020-10-27T23:07:00.863-0800: 5.993: [ParNew: 38429K->2568K(39296K), 0.0050060 secs] 42503K->8142K(126720K), 0.0050811 secs] [Times: user=0.03 sys=0.00, real=0.00 secs] 
+2020-10-27T23:07:00.973-0800: 6.103: [GC (Allocation Failure) 2020-10-27T23:07:00.973-0800: 6.103: [ParNew: 37512K->1706K(39296K), 0.0021830 secs] 43086K->7280K(126720K), 0.0022938 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+2020-10-27T23:07:01.158-0800: 6.287: [GC (Allocation Failure) 2020-10-27T23:07:01.158-0800: 6.287: [ParNew: 36650K->3540K(39296K), 0.0027920 secs] 42224K->9115K(126720K), 0.0028671 secs] [Times: user=0.02 
+```
+
+
+
+#### 作业四：根据上述自己对于 1 和 2 的演示，写一段对于不同 GC 的总结，提交到 Github
+
+**注意：仅已 128m 和 512m 进行分析**
+
+##### 示例一：
+
+**串行化GC：**
+
+```textmate
+1、当分配内存为 128m 时，开始发生几次 young gc 后便会频繁当发生 full gc，由于串行 gc 是单线程当，因此在发生 full gc时，服务事不可用的，直至最后发生OOM，程序结束。
+2、当分配内存为 512m 时，GC 的次数相对减少了很多，但是 GC 的时间却少于分配内存为 128m 时，因为内存小的时候，在分配的空间小，GC 时在进行复制和清除的时候时间便会相对快一些。
+```
+
+**并行 GC：**
+
+```textmate
+1、当分配内存为 128m 时，gc 的效果和串行 GC 的效果很类似，进行几次 GC 后，然后便是频繁的 Full GC，直至最后 OOM, 不过很奇怪的是并行 GC 的时间却高于 串行 GC 的时间。
+2、当分配内存为 512m 时，GC 的次数相对减少了很多，但是 GC 的次数却又多余串行 GC，不顾 GC 的时间低于串行 GC，这就是串行 GC被抛弃的原因。
+```
+
+**CMS GC：**
+
+```textmate
+1、当分配内存为 128m 时，gc的效果表面上看上去和前面的两个很相似，但是如果细看日志的话，会发现不管是young gc 还是 Full GC，它 GC 的时间远远低于并行 GC，且比串行的还要低很多，这获取也是人们喜欢 CMS GC 的原因，即使在 Full GC 的时候，性能也是比较优秀的。
+2、当分配内存为 512m 时，不管是从 gc 的次数，还是 full gc 所花费的时间都是高于前面的 gc。
+```
+
+**G1 GC：**
+
+```textmate
+1、当分配内存为 128m 时，其实最后从 G1 GC 的效果来看，在分配内存为 128m 时，这些 GC 都会发生频繁的 full gc 直至最后 OOM，其中的差异也就是 gc 时的性能有一些差异。
+2、当分配内存为 512m 时，其实从 gc 日志上简单的看，g1 和 CMS GC 的性能相差并不是很大，但是 G1 GC 让STW的时间和分布，变成可预测和可配置，且通过设置某些特定的性能指标，达到该指标可以触发GC，或者控制GC过程，而且堆不再分成年轻代和老年代，而是划分成不同的regions, 每个小块可能一会是Eden区，一会是Old区。
+```
+
+##### 示例二：
+
+执行脚本：wrk -c 40 -d60s  http://localhost:8088/api/hello（40个线程压60s）
+
+```textmate
+这里我分别以128m、512m、1g 作为启动时分配的对大小进行的测试：
+
+CMS GC：
+    128m：
+        Running 1m test @ http://localhost:8088/api/hello
+          2 threads and 40 connections
+          Thread Stats   Avg      Stdev     Max   +/- Stdev
+            Latency     7.26ms   25.64ms 268.44ms   93.94%
+            Req/Sec    16.45k     5.95k   26.71k    78.39%
+          1925752 requests in 1.00m, 229.92MB read
+        Requests/sec:  32052.61
+        Transfer/sec:      3.83MB
+    512m：
+        Running 30s test @ http://localhost:8088/api/hello
+          2 threads and 40 connections
+          Thread Stats   Avg      Stdev     Max   +/- Stdev
+            Latency     4.54ms   15.89ms 240.98ms   95.09%
+            Req/Sec    14.25k     5.82k   23.86k    58.56%
+          846712 requests in 30.08s, 101.09MB read
+        Requests/sec:  28151.70
+        Transfer/sec:      3.36MB
+    1g：
+        Running 1m test @ http://localhost:8088/api/hello
+          2 threads and 40 connections
+          Thread Stats   Avg      Stdev     Max   +/- Stdev
+            Latency     6.61ms   24.46ms 265.10ms   94.33%
+            Req/Sec    17.68k     6.16k   28.68k    79.52%
+          2069396 requests in 1.00m, 247.07MB read
+        Requests/sec:  34475.88
+        Transfer/sec:      4.12MB
+
+G1 GC:
+    128m：
+        Running 1m test @ http://localhost:8088/api/hello
+          2 threads and 40 connections
+          Thread Stats   Avg      Stdev     Max   +/- Stdev
+            Latency     8.01ms   28.12ms 365.46ms   94.03%
+            Req/Sec    12.17k     5.20k   25.35k    60.87%
+          1428793 requests in 1.00m, 170.58MB read
+        Requests/sec:  23786.15
+        Transfer/sec:      2.84MB
+    512m：
+        Running 1m test @ http://localhost:8088/api/hello
+          2 threads and 40 connections
+          Thread Stats   Avg      Stdev     Max   +/- Stdev
+            Latency     5.35ms   16.58ms 226.83ms   93.37%
+            Req/Sec    14.68k     5.82k   27.10k    64.33%
+          1740481 requests in 1.00m, 207.80MB read
+        Requests/sec:  28962.17
+        Transfer/sec:      3.46MB
+    1g：
+        Running 1m test @ http://localhost:8088/api/hello
+          2 threads and 40 connections
+          Thread Stats   Avg      Stdev     Max   +/- Stdev
+            Latency     6.13ms   24.58ms 418.04ms   95.02%
+            Req/Sec    15.75k     5.46k   28.97k    74.55%
+          1844705 requests in 1.00m, 220.24MB read
+        Requests/sec:  30695.97
+        Transfer/sec:      3.66MB
+
+结论：从几个内存参数逐渐提升来看，貌似 CMS GC 的性能稍微好于 G1 GC。
+```
+
+```textmate
+执行脚本：wrk -c 4 -d60s  http://localhost:8088/api/hello（4个线程压60s）
+
+CMS: (1g)
+    Running 1m test @ http://localhost:8088/api/hello
+      2 threads and 4 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency    38.68ms  202.95ms   1.96s    96.33%
+        Req/Sec    11.73k     1.93k   14.56k    95.15%
+      1330556 requests in 1.00m, 158.86MB read
+    Requests/sec:  22160.62
+    Transfer/sec:      2.65MB
+
+G1：（1g）
+    Running 1m test @ http://localhost:8088/api/hello
+      2 threads and 4 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency     6.24ms   26.76ms 209.29ms   94.65%
+        Req/Sec    10.72k     2.67k   12.29k    86.39%
+      1249530 requests in 1.00m, 149.18MB read
+    Requests/sec:  20814.58
+    Transfer/sec:      2.49MB
+
+结论：线程的数量影响着 G1 GC 的性能。当线程数量从40降至4时， G1 GC 的压测性能有了质的提升。
+```
+
+
 #### 作业六：（Week02 作业题目（周六））
 ``要求：写一段代码，使用 HttpClient 或 OkHttp 访问 http://localhost:8801 ，代码提交到 Github。
 ``
