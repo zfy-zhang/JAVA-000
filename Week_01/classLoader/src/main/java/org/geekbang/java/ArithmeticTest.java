@@ -13,8 +13,8 @@ public class ArithmeticTest {
 
     public static void main(String[] args) {
 
-        int a = 1;
-        int b = 7;
+        int a = 3;
+        int b = 8;
 
         int c = b - a;
         int d = a + b;
@@ -30,7 +30,7 @@ public class ArithmeticTest {
         List<Integer> list = Arrays.asList(c, d, e, f);
 
         for (Integer integer : list) {
-            if (integer == ((integer / 2)%1)) {
+            if (1 == integer%2) {
                 System.out.println(map.get(integer));
             }
         }
