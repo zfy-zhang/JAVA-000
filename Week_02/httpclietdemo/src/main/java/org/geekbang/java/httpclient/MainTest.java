@@ -11,8 +11,8 @@ public class MainTest {
 
     public static void main(String[] args) {
         HttpClientUtils hcu = new HttpClientUtils();
-//        String res = hcu.doPost("https://www.baidu.com?tstmp="+Math.random(),"p=2");
-        String res = hcu.doGet("http://localhost:8808/test");
+        String res = hcu.doPost("https://www.baidu.com?tstmp="+Math.random(),"p=2");
+//        String res = hcu.doGet("http://localhost:8808/test");
         System.out.println(res);
     }
 }
