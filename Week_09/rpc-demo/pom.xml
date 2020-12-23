@@ -18,6 +18,7 @@
         <module>rpcfx-core</module>
         <module>rpcfx-api</module>
         <module>rpcfx-provider</module>
+        <module>rpcfx-consumer</module>
     </modules>
 
 

@@ -20,7 +20,7 @@ import java.lang.reflect.Proxy;
 public final class JdkRpcClient implements RpcClient {
 
     static {
-        ParserConfig.getGlobalInstance().addAccept("com.alisha");
+        ParserConfig.getGlobalInstance().addAccept("com.alisha.rpcfx");
 
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
     }
